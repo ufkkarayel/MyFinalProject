@@ -26,14 +26,43 @@ namespace WebAPI.Controllers
             _productService = productService;
         }
 
-        [HttpGet]
-        public List<Product> Get()
+        [HttpGet("GetAll")]
+        public IActionResult GetAll()
         {
             //dependency chain -- bağımlılık zinciri var burada
+            //Swagger dokümantasyon sağlayıcı
 
-            
+
             var result = _productService.GetAll();
-            return result.Data;
+            if (result.Success == true)
+            {
+                return Ok(result.Data);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("GetByID")]
+
+        public IActionResult GetById(int id)
+        {
+            var result = _productService.GetById(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpPost("Add")]
+
+        public IActionResult Add(Product product)
+        {
+            var result = _productService.Add(product);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
         }
     }
 }
