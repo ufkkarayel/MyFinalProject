@@ -39,6 +39,7 @@ namespace WebAPI.Controllers
                 return Ok(result.Data);
             }
             return BadRequest(result);
+
         }
 
         [HttpGet("GetByID")]
