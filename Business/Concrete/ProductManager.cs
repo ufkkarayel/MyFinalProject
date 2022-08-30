@@ -18,21 +18,26 @@ namespace Business.Concrete
     public class ProductManager : IProductService
     {
         IProductDal _productDal;
-
+        
         public ProductManager(IProductDal productDal)
         {
             _productDal = productDal;
+           
         }
 
-        [ValidationAspect(typeof(ProductValidator))]
+
+        //[ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
             //business codes =
-            //validation = doğrulama. nesnenin iş kurallarına dahil etmek için yapısal olarak kontrol etmektir. 
+            //validation = doğrulama. nesnenin iş kurallarına dahil etmek için yapısal olarak kontrol etmektir.
+           
+                _productDal.Add(product);
+                return new SuccessResult(Messages.ProductAdded);
+
             
-            _productDal.Add(product);
-            return new SuccessResult(Messages.ProductAdded);
         }
+
 
         public IDataResult<List<Product>> GetAll()
         {
