@@ -3,6 +3,7 @@ using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using DataAccess.Concrete.InMemory;
@@ -19,10 +20,11 @@ namespace Business.Concrete
     public class ProductManager : IProductService
     {
         IProductDal _productDal;
-
+        ICategoryService _categoryService;
         public ProductManager(IProductDal productDal)
         {
             _productDal = productDal;
+           
 
         }
 
@@ -32,18 +34,15 @@ namespace Business.Concrete
         {
             //business codes =
             //validation = doğrulama. nesnenin iş kurallarına dahil etmek için yapısal olarak kontrol etmektir.
-            if (CheckIfProductCountOfCategoryCorrect(product.CategoryId).Success)
+            IResult result = BusinessRules.Run(CheckIfProductNameExists(product.ProductName),
+                CheckIfProductCountOfCategoryCorrect(product.CategoryId));
+
+            if (result != null)
             {
-                if (CheckIfProductExists(product.ProductName).Success)
-                {
-                    _productDal.Add(product);
-                    return new SuccessResult(Messages.ProductAdded);
-                }
-
-
+                return result;
             }
-            return new ErrorResult();
-
+            _productDal.Add(product);
+            return new SuccessResult(Messages.ProductAdded);
 
         }
 
@@ -96,7 +95,7 @@ namespace Business.Concrete
             }
             return new SuccessResult();
         }
-        private IResult CheckIfProductExists(string productName)
+        private IResult CheckIfProductNameExists(string productName)
         {
             var result = _productDal.GetAll(p => p.ProductName == productName).Any();
             if (result)
@@ -105,5 +104,8 @@ namespace Business.Concrete
             }
             return new SuccessResult();
         }
+
+        
+  
     }
 }
