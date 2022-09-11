@@ -16,5 +16,6 @@ namespace Business.Constants
         public static string ProductNameAlreadyExists="Aynı isimde ürün zaten var.";
 
         public static string CategoryIdBiggerThanFifteen = "Kategori Id 15ten büyük olamaz";
+        internal static string CategoryLimitExceded="Kategori Limiti aşıldığı için yeni ürün eklenemiyor.";
     }
 }
